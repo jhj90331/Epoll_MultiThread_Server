@@ -49,7 +49,7 @@ void userManager::is_alive_thread()
 {
 	while(1)
 	{
-		for (auto itr = m_userMap.begin(); itr != m_userMap.end(); )
+		for (auto itr = m_userMap.begin(); itr != m_userMap.end(); itr++)
 		{
 			m_userMap_Mutex.lock();
 
@@ -62,16 +62,14 @@ void userManager::is_alive_thread()
 
 				close(itr->second->get_fd());
 				delete itr->second;
-			}
-			else
-			{
-				itr++;
+
+				break;
 			}
 
 			m_userMap_Mutex.unlock();
 		}
 
-		//m_userMap_Mutex.unlock();
+		m_userMap_Mutex.unlock();
 
 		usleep(1000);
 	}
