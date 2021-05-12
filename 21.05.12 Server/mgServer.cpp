@@ -209,7 +209,6 @@ void mgServer::mg_connect()
 
  void mgServer::mg_login(int client_fd)
 {
-	// 여기서 SEND RECV 하면 동기식이라 멈출듯?
 	// mg_login을 스레드 풀로 돌리고, 여기서 DB서버와 send recv 해보기
 
 	/////////-------------------------------------------
