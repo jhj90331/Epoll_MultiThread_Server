@@ -245,7 +245,7 @@ void mgServer::mg_connect()
 	}
 
 	// 헤드와 테일이 있는지 검사
-	if (strncmp(recv_buf, "AA11", 4) != 0 || strncmp(recv_buf + recv_len - sizeof(TAIL), "11AA", 4))
+	if (strncmp(recv_buf, "AA11", 4) != 0 || strncmp(recv_buf + recv_len - sizeof(TAIL), "11AA", 4) != 0)
 	{
 		cout << recv_buf + recv_len - 4 << endl;
 		cout << "Not Contain HEADER OR TAIL" << endl;
