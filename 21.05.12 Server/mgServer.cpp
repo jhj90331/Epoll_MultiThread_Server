@@ -215,17 +215,47 @@ void mgServer::mg_connect()
 	// 여기서 로그인 처리 --------------------------------
 	////////--------------------------------------------
 
-	 cout << "Login Process Start" << endl;
 
-	 // 1. 클라이언트에서 ID, PW 정보 RECV 하기
-	 char recv_buf[sizeof(PACKET) + 1] = {0};
-	 int recv_len;
-	 bool loginResult = false;
+	cout << "Login Process Start" << endl;
 
-	 recv_len = read(client_fd, &recv_buf, sizeof(PACKET) + 1);
+	// 1. 클라이언트에서 ID, PW 정보 RECV 하기
+	char recv_buf[sizeof(PACKET) + 1] = { 0 };
+	int recv_len;
+	bool loginResult = false;
+
+	recv_len = read(client_fd, &recv_buf, sizeof(PACKET) + 1);
+
+	// 패킷이 너무 크거나 작으면 접속 종료
+	if(recv_len < 0)
+	{
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+		cout << "[" << client_fd << "] Recv Error Occured ==> Recv_Len : " << recv_len << endl;
+		cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+		close(client_fd);
+		usleep(100);
+		return;
+	}
+	if (recv_len < NO_BODY_PACKET_SIZE || recv_len > NO_BODY_PACKET_SIZE + MAX_ID_SIZE + MAX_PW_SIZE + 1)// + (\n)
+	{
+		cout << " Login PACKET Too Small / Big" << endl;
+		cout << "RECV LEN : " << recv_len << endl;
+		close(client_fd);
+		usleep(100);
+		return;
+	}
+
+	// 헤드와 테일이 있는지 검사
+	if (strncmp(recv_buf, "AA11", 4) != 0 || strncmp(recv_buf + recv_len - sizeof(TAIL), "11AA", 4))
+	{
+		cout << recv_buf + recv_len - 4 << endl;
+		cout << "Not Contain HEADER OR TAIL" << endl;
+		close(client_fd);
+		usleep(100);
+		return;
+	}
+
 
 	 // 2. 받은 ID, pw  DB 서버로 전송, 결과 받기
-
 	 cout << "Client DB REQ : " << client_fd << endl;
 	 m_dbMutex.lock();
 	 loginResult = m_dbManager.DB_loginREQ(recv_buf, recv_len);
