@@ -39,6 +39,9 @@
 #define PORT 2021
 #define DBPORT 1995
 
+#define MAX_ID_SIZE 50
+#define MAX_PW_SIZE 50
+
 
 using namespace std;
 
