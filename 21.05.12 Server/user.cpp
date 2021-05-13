@@ -147,7 +147,7 @@ bool user::recvInUser()
 				{
 					cout << "SomeThing Blocking Before AA11" << endl;
 					m_ringBuffer.pop(start_Offset);	// AA11 앞의 문자열 제거
-					cout << "POPED RING BUF SIZE : " << m_ringBuffer.get_curSize() << endl;
+					cout << "POP RING BUF SIZE : " << m_ringBuffer.get_curSize() << endl;
 				}
 				else if(start_Offset < 0) // 버퍼 안에 AA11이 없을 경우
 				{
